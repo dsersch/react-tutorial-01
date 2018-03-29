@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import classes from './App.css';
-import Person from "./Person/Person";
-import ErrorBoundry from './ErrorBoundry/ErrorBoundry';
+import Persons from "../components/Persons/Persons";
+import CockPit from '../components/Cockpit/Cockpit';
+
 
 class App extends Component {
   state = {
@@ -9,11 +10,11 @@ class App extends Component {
       {id: 'hfgeiwh83023', name: "Max", age: 28},
       {id: '083ut09834r7', name: "Manu", age: 29},
       {id: '9038245ruy25', name: "Stephanie", age: 26}
-    ]
+    ],
+    showPersons: false
   }
 
   deletePersonHandler = (index) => {
-    
     const persons = [...this.state.persons];
     persons.splice(index, 1);
     this.setState({persons: persons})
@@ -42,44 +43,23 @@ class App extends Component {
 
   render() {
     let persons = null;
-    let btnClass = '';
 
     if (this.state.showPersons) {
       persons = 
-        <div>
-          {this.state.persons.map((person, index) => {
-            return (
-              <ErrorBoundry key={person.id}>
-                <Person 
-                  name={person.name} 
-                  age={person.age}
-                  click={() => this.deletePersonHandler(index)}
-                  changed={(event) => this.nameChangeHandler(event, person.id)}>
-                </Person>
-              </ErrorBoundry>
-            )
-          })}
-      </div>
-      btnClass = classes.red;
-    }
-
-    let assignedClasses = [];
-
-    if(this.state.persons.length <= 2) {
-      assignedClasses.push(classes.red);
-    }
-    if (this.state.persons.length <= 1) {
-      assignedClasses.push(classes.bold)
+        <Persons 
+          persons={this.state.persons}
+          click={this.deletePersonHandler}
+          changed={this.nameChangeHandler}
+        />
     }
 
     return (
       <div className={classes.App}>
-        <h1>Hi, I'm a React app</h1>
-        <p className={assignedClasses.join(' ')}>This is really working...</p>
-        <button 
-          className={btnClass}
-          onClick={this.togglePersonHandler}
-          >Show Names</button>
+        <CockPit 
+          persons={this.state.persons}
+          showPersons={this.state.showPersons}
+          click={this.togglePersonHandler}
+        />
         {persons}
       </div>
       );
